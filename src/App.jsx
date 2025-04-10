@@ -1,4 +1,5 @@
 import { useEffect,useState } from 'react'
+import {useDebounce} from 'react-use'
 import reactLogo from './assets/react.svg'
 import './App.css'
 import Search from './components/search.jsx'
@@ -19,6 +20,9 @@ const App= ()=>{
   const [movieList, setMovieList]= useState([]);
   const [errorMessage, setErrorMessage]= useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState();
+
+  useDebounce(()=>setDebouncedSearchTerm(searchTerm),500,[searchTerm])
 
 
   const fetchMovies = async (query='') =>{
@@ -55,8 +59,8 @@ const App= ()=>{
 
   };
   useEffect(()=>{
-    fetchMovies(searchTerm)
-  },[searchTerm]);
+    fetchMovies(debouncedSearchTerm)
+  },[debouncedSearchTerm]);
 
   return(
     <main>
